@@ -1,5 +1,6 @@
 package codeathon.ku.mentr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -93,6 +94,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 String pass = mPassword.getText().toString();
                 mAuth.createUserWithEmailAndPassword(email, pass);
                 Toast.makeText(WelcomeActivity.this, "Creating new user", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(WelcomeActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         }));
     }

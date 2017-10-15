@@ -1,30 +1,26 @@
 package codeathon.ku.mentr;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.*;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class WelcomeActivity extends AppCompatActivity {
 
-    private TextView mUsername;
-    private TextView mPassword;
+    private TextView mUsername, mPassword;
+    private Button signUpButton, loginButton, logoutButton;
 
-    //Constants
-    private static final String TAG = "UsernamePassword";
+    //Log
+    private static final String TAG = "MainActivity";
 
-    //Declare Firebase Authorization
+    //Declare Firebase Authorization and listener
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -37,12 +33,68 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         mPassword = (TextView) findViewById(R.id.passwordLogin);
 
         //Buttons
-        findViewById(R.id.loginButton).setOnClickListener(this);
-        findViewById(R.id.signUpButton).setOnClickListener(this);
+        signUpButton = (Button) findViewById(R.id.signUpButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
+        logoutButton = (Button) findViewById(R.id.logoutButton);
+
 
         //Initialize authorization
         mAuth = FirebaseAuth.getInstance();
 
+        //Monitors changes
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(WelcomeActivity.this, "Signed in with: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(WelcomeActivity.this, "Successfully logged out", Toast.LENGTH_SHORT).show();
+                }
+                // ...
+            }
+        };
+
+        //Login in button functionality
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = mUsername.getText().toString();
+                String pass = mPassword.getText().toString();
+                //Success
+                if(!email.equals("") && !pass.equals("")) {
+                    mAuth.signInWithEmailAndPassword(email,pass);
+                }
+                //Failure
+                else {
+                    Toast.makeText(WelcomeActivity.this, "Email and Password Required", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //Log out button functionality
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Toast.makeText(WelcomeActivity.this, "Logging off...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //Sign up button functionality
+        signUpButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = mUsername.getText().toString();
+                String pass = mPassword.getText().toString();
+                mAuth.createUserWithEmailAndPassword(email, pass);
+                Toast.makeText(WelcomeActivity.this, "Creating new user", Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     @Override
@@ -52,111 +104,11 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         //To see if user is signed in and refresh user interface
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
-
-    private void createAccount(String username, String password) {
-        Log.d(TAG, "createAccount:" + username);
-        if(!validateForm()){
-            return;
-        }
-
-        //Email create user
-        mAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //Success
-                    Log.d(TAG, "createUserWithEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                }
-                else {
-                    //Failure
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(WelcomeActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private void signIn(String username, String password) {
-        Log.d(TAG, "signIn:" + username);
-        if(!validateForm()) {
-            return;
-        }
-
-        //Email sign in
-        mAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //Success
-                    Log.d(TAG, "signInWithEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                }
-                else {
-                    //Failure
-                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    Toast.makeText(WelcomeActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    private boolean validateForm() {
-        boolean valid = true;
-
-        String email = mUsername.getText().toString();
-        if(TextUtils.isEmpty(email)) {
-            mUsername.setError("Required.");
-            valid = false;
-        }
-        else {
-            mUsername.setError(null);
-        }
-
-        String password = mPassword.getText().toString();
-        if(TextUtils.isEmpty(password)) {
-            mPassword.setError("Required.");
-            valid = false;
-        }
-        else {
-            mPassword.setError(null);
-        }
-
-        return valid;
-    }
-
     @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if( i == R.id.signUpButton) {
-            if(validateForm()) {
-                //Success
-                createAccount(mUsername.getText().toString(), mPassword.getText().toString());
-                Intent intent = new Intent(this, SignupActivity.class);
-                startActivity(intent);
-                Log.d(TAG, "Create your account");
-            }
-            else {
-                //Failure
-                Log.w(TAG, "signInWithEmail:failure");
-                Toast.makeText(WelcomeActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-            }
+    public void onStop() {
+        super.onStop();;
+        if (mAuthListener !=null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
-        if( i == R.id.loginButton) {
-            if(1 == 1) {
-                signIn(mUsername.getText().toString(), mPassword.getText().toString());
-                Intent intent = new Intent(this, mentorActivity.class);
-                startActivity(intent);
-            }
-            else {
-                signIn(mUsername.getText().toString(), mPassword.getText().toString());
-                Intent intent = new Intent(this, studentActivity.class);
-                startActivity(intent);
-            }
-        }
-    }
-
-    public String getUsername() {
-        return mUsername.getText().toString();
     }
 }

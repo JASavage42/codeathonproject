@@ -54,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference();
 
+
         //Monitors changes
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -92,8 +93,9 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "Adding User.");
                 String name = newFirstName.getText().toString() + " " + newLastName.getText().toString();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String email = user.getEmail();
                 if(!name.equals("")) {
-                    FirebaseUser user = mAuth.getCurrentUser();
                     String userID = user.getUid();
                     mRef.child("users").child(userID).child("name").setValue(name);
 
@@ -103,6 +105,7 @@ public class SignupActivity extends AppCompatActivity {
                     else if (newMentorButton.isChecked()) {
                         mRef.child("users").child(userID).child("mentor").setValue(true);
                     }
+                    mRef.child("users").child(userID).child("email").setValue(email);
                 }
             }
         });

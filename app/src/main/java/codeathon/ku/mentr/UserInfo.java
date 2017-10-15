@@ -9,26 +9,17 @@ public class UserInfo {
     private String lastName;
     private String email;
     private String mentor;
+    private String name = firstName + " " + lastName;
 
     public UserInfo () {
 
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setName(String name) {
+        this.name= name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public String getName() { return name;}
 
     public String getEmail() {
         return email;

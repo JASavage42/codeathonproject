@@ -74,6 +74,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(WelcomeActivity.this, "Email and Password Required", Toast.LENGTH_SHORT).show();
                 }
+                Intent intent = new Intent(WelcomeActivity.this, mentorActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -39,8 +39,6 @@ public class mentorActivity extends AppCompatActivity {
     private ListView mListView;
     private Button chatButton;
 
-    public mentorActivity() {
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +69,6 @@ public class mentorActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                     Toast.makeText(mentorActivity.this, "Successfully logged out", Toast.LENGTH_SHORT).show();
                 }
-                // ...
             }
         };
 
@@ -92,15 +89,6 @@ public class mentorActivity extends AppCompatActivity {
 
             }
         });
-
-        //Log out button functionality
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(WelcomeActivity.this, );
-                startActivity();
-            }
-        });
     }
 
     @Override
@@ -119,3 +107,4 @@ public class mentorActivity extends AppCompatActivity {
         }
     }
 }
+

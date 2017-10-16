@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /*
 * Shows list of available Students
  */
-public class mentorActivity extends AppCompatActivity {
+public class studentActivity extends AppCompatActivity {
 
     //Tag
     private static final String TAG = "studentActivity";
@@ -38,9 +38,6 @@ public class mentorActivity extends AppCompatActivity {
     private String userID;
     private ListView mListView;
     private Button chatButton;
-
-    public mentorActivity() {
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +62,11 @@ public class mentorActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(mentorActivity.this, "Signed in with: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(studentActivity.this, "Signed in with: " + user.getEmail(), Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Toast.makeText(mentorActivity.this, "Successfully logged out", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(studentActivity.this, "Successfully logged out", Toast.LENGTH_SHORT).show();
                 }
                 // ...
             }
@@ -83,7 +80,7 @@ public class mentorActivity extends AppCompatActivity {
                 a.add("Name: Ada Lovelace");
                 a.add("Email: alovelace@gmail.com");
                 a.add("Mentor: True");
-                ArrayAdapter adapter = new ArrayAdapter(mentorActivity.this, android.R.layout.simple_list_item_1, a);
+                ArrayAdapter adapter = new ArrayAdapter(studentActivity.this, android.R.layout.simple_list_item_1, a);
                 mListView.setAdapter(adapter);
             }
 
@@ -97,8 +94,7 @@ public class mentorActivity extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeActivity.this, );
-                startActivity();
+
             }
         });
     }

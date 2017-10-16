@@ -1,10 +1,13 @@
 package codeathon.ku.mentr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,18 +22,25 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
+/*
+* Shows list of available Students
+ */
 public class mentorActivity extends AppCompatActivity {
 
     //Tag
-    private static final String TAG = "ViewDatabase";
+    private static final String TAG = "mentorActivity";
 
-    //Firbase
+    //Firebase
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mRef;
     private String userID;
     private ListView mListView;
+    private Button chatButton;
+
+    public mentorActivity() {
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +53,15 @@ public class mentorActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference();
         FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();
+        if (user != null) {
+            userID = user.getUid();
+        }
 
         //Monitors changes
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -66,12 +78,27 @@ public class mentorActivity extends AppCompatActivity {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                showProfiles(dataSnapshot);
+
+                ArrayList<String> a = new ArrayList<>();
+                a.add("Name: Ada Lovelace");
+                a.add("Email: alovelace@gmail.com");
+                a.add("Mentor: True");
+                ArrayAdapter adapter = new ArrayAdapter(mentorActivity.this, android.R.layout.simple_list_item_1, a);
+                mListView.setAdapter(adapter);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        //Log out button functionality
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(WelcomeActivity.this, );
+                startActivity();
             }
         });
     }
@@ -81,7 +108,7 @@ public class mentorActivity extends AppCompatActivity {
         super.onStart();
 
         //To see if user is signed in and refresh user interface
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser user = mAuth.getCurrentUser();
 
     }
     @Override
@@ -90,34 +117,5 @@ public class mentorActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
-
-    private void showProfiles(DataSnapshot dataSnapshot) {
-        //Loop through the database and show user's Name, Email, and Mentor
-  /*      for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            UserInfo userInfo = new UserInfo();
-            //userInfo.setName(ds.child(userID).getValue(UserInfo.class).getName());
-            //userInfo.setEmail(ds.child(userID).getValue(UserInfo.class).getEmail());
-            //userInfo.setMentor(ds.child(userID).getValue(UserInfo.class).getMentor());
-
-            //Display!
-            Log.d(TAG, "showProfiles: name: " + userInfo.getName());
-            Log.d(TAG, "showProfiles: email: " + userInfo.getEmail());
-            Log.d(TAG, "showProfiles: mentor: " + userInfo.getMentor());
-
-            ArrayList<String> a = new ArrayList<>();
-            a.add(userInfo.getName());
-            a.add(userInfo.getEmail());
-            a.add(userInfo.getMentor());
-            ArrayAdapter adapter = new ArrayAdapter(mentorActivity.this, android.R.layout.simple_list_item_1, a);
-            mListView.setAdapter(adapter); */
-
-        ArrayList<String> a = new ArrayList<>();
-        a.add("Testy");
-        a.add("McTestFace");
-        a.add("Please work");
-        ArrayAdapter adapter = new ArrayAdapter(mentorActivity.this, android.R.layout.simple_list_item_1, a);
-        mListView.setAdapter(adapter);
-        //}
     }
 }

@@ -5,21 +5,23 @@ package codeathon.ku.mentr;
  */
 
 public class UserInfo {
-    private String firstName;
+    private String name;
     private String lastName;
     private String email;
-    private String mentor;
-    private String name = firstName + " " + lastName;
+    private boolean mentor;
 
-    public UserInfo () {
 
+    public UserInfo() {
+
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
-        this.name= name;
+        this.name = name;
     }
-
-    public String getName() { return name;}
 
     public String getEmail() {
         return email;
@@ -29,11 +31,11 @@ public class UserInfo {
         this.email = email;
     }
 
-    public String getMentor() {
+    public boolean getMentor() {
         return mentor;
     }
 
-    public void setMentor(String mentor) {
+    public void setMentor(boolean mentor) {
         this.mentor = mentor;
     }
 }

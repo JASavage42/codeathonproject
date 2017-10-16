@@ -3,7 +3,6 @@ package codeathon.ku.mentr;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -20,9 +19,6 @@ public class SignupActivity extends AppCompatActivity {
 
     //Tag
     private static final String TAG = "SignupActivity";
-
-    //Final for required items
-    private static final String REQUIRED = "Required";
 
     //Initialize Database
     private FirebaseDatabase mFirebaseDatabase;

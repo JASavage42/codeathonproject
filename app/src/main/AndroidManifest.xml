@@ -25,7 +25,8 @@
             android:name=".mentorActivity"
             android:label="@string/title_activity_mentor"
             android:parentActivityName=".WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="codeathon.ku.mentr.WelcomeActivity" />

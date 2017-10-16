@@ -111,7 +111,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
     @Override
     public void onStop() {
-        super.onStop();;
+        super.onStop();
         if (mAuthListener !=null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
